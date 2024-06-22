@@ -11,7 +11,7 @@ export function withAuth<T extends AuthResponse, U extends any[]>(
         console.warn("WARNING - You're bypassing authentication");
         warningCount++;
       }
-      return { success: true } as T;
+      return { success: true, team_id: "preview" } as T;
     } else {
       try {
         return await originalFunction(...args);
