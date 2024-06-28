@@ -40,6 +40,7 @@ export class WebScraperDataProvider {
     "gpt-4-turbo";
   private crawlerMode: string = "default";
   private allowBackwardCrawling: boolean = false;
+  private allowExternalContentLinks: boolean = false;
 
   authorize(): void {
     throw new Error("Method not implemented.");
@@ -130,9 +131,9 @@ export class WebScraperDataProvider {
     switch (this.mode) {
       case "crawl":
         return this.handleCrawlMode(inProgress);
-      case "single_urls":
+        case "single_urls":
         return this.handleSingleUrlsMode(inProgress);
-      case "sitemap":
+        case "sitemap":
         return this.handleSitemapMode(inProgress);
       default:
         return [];
@@ -162,7 +163,7 @@ export class WebScraperDataProvider {
   private async handleCrawlMode(
     inProgress?: (progress: Progress) => void
   ): Promise<Document[]> {
-
+    
     const crawler = new WebCrawler({
       initialUrl: this.urls[0],
       includes: this.includes,
@@ -172,6 +173,7 @@ export class WebScraperDataProvider {
       limit: this.limit,
       generateImgAltText: this.generateImgAltText,
       allowBackwardCrawling: this.allowBackwardCrawling,
+      allowExternalContentLinks: this.allowExternalContentLinks,
     });
 
     let links = await crawler.start(
@@ -489,6 +491,7 @@ export class WebScraperDataProvider {
     this.crawlerMode = options.crawlerOptions?.mode ?? "default";
     this.ignoreSitemap = options.crawlerOptions?.ignoreSitemap ?? false;
     this.allowBackwardCrawling = options.crawlerOptions?.allowBackwardCrawling ?? false;
+    this.allowExternalContentLinks = options.crawlerOptions?.allowExternalContentLinks ?? false;
 
     // make sure all urls start with https://
     this.urls = this.urls.map((url) => {
