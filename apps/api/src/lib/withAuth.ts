@@ -6,7 +6,7 @@ export function withAuth<T extends AuthResponse, U extends any[]>(
   originalFunction: (...args: U) => Promise<T>
 ) {
   return async function (...args: U): Promise<T> {
-    if (process.env.USE_DB_AUTHENTICATION === "false") {
+    if (process.env.USE_DB_AUTHENTICATION === "true") {
       if (warningCount < 5) {
         console.warn("WARNING - You're bypassing authentication");
         warningCount++;
